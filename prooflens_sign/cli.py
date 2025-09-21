@@ -115,6 +115,40 @@ def cmd_verify(args):
     print("VERIFY: FAIL (image bytes differ)")
     sys.exit(2)
 
+
+
+def cmd_verify_all(args):
+    import glob, json, sys
+    root = args.folder
+    pattern = "**/*.manifest.json" if args.recursive else "*.manifest.json"
+    manifests = glob.glob(os.path.join(root, pattern), recursive=args.recursive)
+    if not manifests:
+        print("[warn] no manifests found"); sys.exit(1)
+    total=ok=fail=0
+    for mpath in manifests:
+        try:
+            with open(mpath, "r", encoding="utf-8") as f:
+                man = json.load(f)
+            expected = man.get("source_sha256") or man.get("asset",{}).get("sha256")
+            ipath = mpath.replace(".manifest.json","")  # same name as image
+            if not os.path.exists(ipath):
+                print(f"[MISS] image not found for {mpath}")
+                fail+=1; total+=1; continue
+            actual = sha256_bytes(ipath)
+            if actual == expected:
+                print(f"[PASS] {ipath}")
+                ok+=1
+            else:
+                print(f"[FAIL] {ipath}")
+                fail+=1
+            total+=1
+        except Exception as e:
+            print(f"[ERR ] {mpath}: {e}")
+            fail+=1; total+=1
+    print(f"\nSUMMARY: total={total} pass={ok} fail={fail}")
+    sys.exit(0 if fail==0 else 2)
+
+
 def build_parser():
     p = argparse.ArgumentParser(prog=APP, description="ProofLens demo signer (detached manifests)")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -138,6 +172,14 @@ def build_parser():
     s4.add_argument("image", help="path to image file")
     s4.add_argument("manifest", help="path to manifest json")
     s4.set_defaults(func=cmd_verify)
+
+
+
+    s5 = sub.add_parser("verify-all", help="verify all *.manifest.json in a folder")
+    s5.add_argument("folder", help="folder to scan")
+    s5.add_argument("-r", "--recursive", action="store_true", help="recurse into subfolders")
+    s5.set_defaults(func=cmd_verify_all)
+
     return p
 
 def main():
