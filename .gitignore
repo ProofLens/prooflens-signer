@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 .venv/
 
-# Node
+# Node / builds (harmless to keep even if unused)
 node_modules/
 dist/
 build/
@@ -11,4 +11,7 @@ build/
 # OS/editor
 .DS_Store
 Thumbs.db
-*.log
+
+# Env files
+.env
+.env.*
