@@ -1,17 +1,8 @@
-# Python
 __pycache__/
-*.pyc
+*.py[cod]
 .venv/
-
-# Node / builds (harmless to keep even if unused)
-node_modules/
+.env
 dist/
 build/
-
-# OS/editor
 .DS_Store
 Thumbs.db
-
-# Env files
-.env
-.env.*
