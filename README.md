@@ -1,25 +1,19 @@
-\# ProofLens Signer (Python CLI)
+# ProofLens Signer (Python CLI)
 
-
+[![CI](https://github.com/ProofLens/prooflens-signer/actions/workflows/ci.yml/badge.svg)](https://github.com/ProofLens/prooflens-signer/actions/workflows/ci.yml)
 
 Generate and verify lightweight image manifests for ProofLens.
 
+---
 
-
-!\[ci](https://github.com/ProofLens/prooflens-signer/actions/workflows/ci.yml/badge.svg)
-
-
-
-\## Install
-
+## Install
 ```bash
-
-python -m venv .venv \&\& . .venv/Scripts/activate  # Windows PowerShell
-
+# Windows PowerShell
+python -m venv .venv && . .venv/Scripts/activate
 pip install -r requirements.txt  # if used; else none required
-
 Usage
-
+bash
+Copy code
 # Sign one image → writes image.jpg.manifest.json
 python -m prooflens_sign sign path/to/image.jpg --creator "Your Name"
 
@@ -28,9 +22,9 @@ python -m prooflens_sign verify path/to/image.jpg path/to/image.jpg.manifest.jso
 
 # Verify all images in a folder (looks for matching *.manifest.json)
 python -m prooflens_sign verify-all path/to/folder
-
 Manifest fields (v0)
-
+json
+Copy code
 {
   "manifest_version": "demo-1",
   "created_at": "2025-09-29T00:00:00Z",
@@ -42,10 +36,8 @@ Manifest fields (v0)
   "signing": { "type": "demo-self-signed", "key_id": "local", "note": "" },
   "edits": []
 }
-
 Notes
-
 Integrity only (hash match). For identity/cert-based signing, see docs/roadmap.md.
 
-
-
+License
+MIT
